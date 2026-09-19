@@ -1,259 +1,272 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-neutral-950 font-sans text-neutral-100 antialiased selection:bg-amber-500 selection:text-neutral-950">
+<html lang="es" class="h-full w-full overflow-hidden">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Abel Sangabriel Mejía - TITAN MEATS</title>
-    <!-- Tailwind CSS -->
+    <title>COMING SOON | ZERO SYSTEMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Outfit, Plus Jakarta Sans & Montserrat -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,600;0,900;1,600&family=Outfit:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            gold: '#f59e0b',
-                            red: '#dc2626',
-                            crimson: '#991b1b',
-                            dark: '#0c0a09',
-                            card: '#1c1917',
-                            border: '#292524'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        display: ['Outfit', 'sans-serif'],
-                        montserrat: ['Montserrat', 'sans-serif']
-                    }
-                }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,700;0,900;1,600&family=Space+Grotesk:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Space Grotesk', 'Montserrat', sans-serif;
+            background-color: #030305;
+            color: #ffffff;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Canvas de fondo */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Halo interactivo seguidor del ratón (sólo desktop/hover) */
+        .mouse-light {
+            position: fixed;
+            width: 550px;
+            height: 550px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(168, 85, 247, 0.08) 35%, rgba(0, 0, 0, 0) 70%);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            mix-blend-mode: screen;
+            transition: opacity 0.3s ease, width 0.3s, height 0.3s;
+            opacity: 0;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .mouse-light.active {
+                opacity: 1;
             }
         }
-    </script>
-    <style>
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0c0a09; }
-        ::-webkit-scrollbar-thumb { background: #292524; border-radius: 99px; }
-        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
 
+        /* Estilo general para letras animadas */
+        .kinetic-letter {
+            display: inline-block;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s, text-shadow 0.3s;
+            cursor: pointer;
+            will-change: transform;
+            position: relative;
+        }
+
+        .kinetic-letter:hover {
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 40px rgba(168, 85, 247, 0.6);
+        }
+
+        /* Contenedor del Logo Central e Interacción 3D */
+        .logo-card-container {
+            perspective: 1000px;
+            z-index: 10;
+        }
+
+        .logo-card {
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out, filter 0.3s ease;
+            will-change: transform;
+        }
+
+        /* Glow dinámico detrás del logo */
         .glow-effect {
-            box-shadow: 0 0 50px -10px rgba(220, 38, 38, 0.25);
+            position: absolute;
+            inset: -10px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, rgba(147, 51, 234, 0.2) 50%, transparent 70%);
+            animation: pulseGlow 4s ease-in-out infinite alternate;
+            filter: blur(20px);
+            opacity: 0.6;
+            z-index: -1;
+            transition: opacity 0.4s, filter 0.4s;
         }
 
-        .gold-glow {
-            box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.3);
+        @media (min-width: 640px) {
+            .glow-effect {
+                inset: -20px;
+                filter: blur(25px);
+            }
         }
 
-        .card-hover-effect {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .card-hover-effect:hover {
-            transform: translateY(-4px);
-            border-color: rgba(245, 158, 11, 0.5);
+        .logo-card-container:hover .glow-effect {
+            opacity: 1;
+            filter: blur(35px);
         }
 
-        /* Estilos específicos para el Footer de Zero Systems */
+        @keyframes pulseGlow {
+            0% { transform: scale(0.92); opacity: 0.4; }
+            100% { transform: scale(1.12); opacity: 0.8; }
+        }
+
+        /* Scanlines estéticas */
+        .scanline-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
+            background-size: 100% 4px;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.25;
+        }
+
+        /* Estilos del Footer */
         footer {
-            margin-top: auto;
-            padding: 2rem 1rem 1rem 1rem;
-            border-top: 1px solid rgba(41, 37, 36, 0.8);
-            background-color: #0c0a09;
+            position: absolute;
+            bottom: 1rem;
+            z-index: 20;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            footer {
+                bottom: 1.5rem;
+            }
         }
 
         .footer-credits {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
             gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.4rem 0.9rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 640px) {
+            .footer-credits {
+                gap: 0.75rem;
+                padding: 0.5rem 1.25rem;
+            }
+        }
+
+        .footer-credits:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
 
         .footer-credits span {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             text-transform: lowercase;
-            letter-spacing: 0.1em;
-            color: #737373;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: 0.12em;
+            color: #888888;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+        }
+
+        @media (min-width: 640px) {
+            .footer-credits span {
+                font-size: 0.75rem;
+                letter-spacing: 0.15em;
+            }
         }
 
         .zero-systems-logo {
-            display: inline-block;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            transition: transform 0.3s ease;
         }
 
         .zero-systems-logo:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
+            transform: scale(1.05);
         }
 
         .zero-systems-svg {
-            width: 180px;
-            height: auto;
-            max-width: 100%;
+            height: 18px;
+            width: auto;
             display: block;
+        }
+
+        @media (min-width: 640px) {
+            .zero-systems-svg {
+                height: 24px;
+            }
+        }
+
+        /* SVG Central animado */
+        .hero-svg {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
+            transition: filter 0.3s ease;
+        }
+
+        .logo-card-container:hover .hero-svg {
+            filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.6));
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col bg-neutral-950 text-neutral-100 font-sans">
+<body class="flex flex-col items-center justify-between h-full h-[100dvh] w-full relative overflow-hidden select-none">
 
-    <!-- Hero Header Integrado con Perfil -->
-    <header class="relative overflow-hidden bg-gradient-to-b from-stone-900 via-neutral-950 to-neutral-950 pt-8 pb-6 px-4 border-b border-stone-800/80">
-        <!-- Luces de fondo -->
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-red-600/15 rounded-full blur-[120px] pointer-events-none"></div>
-        <div class="absolute -top-10 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+    <!-- Fondo interactivo de partículas en canvas -->
+    <canvas id="bg-canvas"></canvas>
+    
+    <!-- Luz flotante seguidora de puntero -->
+    <div id="mouse-light" class="mouse-light"></div>
+    
+    <!-- Overlay de líneas de escaneo estilo minimal cyber/high-tech -->
+    <div class="scanline-overlay"></div>
 
-        <div class="max-w-4xl mx-auto relative z-10 flex flex-col items-center text-center">
-            
-            <!-- Badge Superior -->
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-900/80 border border-stone-700/60 backdrop-blur-md mb-6 gold-glow">
-                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                <span class="text-xs font-bold tracking-widest uppercase text-amber-400 font-display">TITAN MEATS ®</span>
-            </div>
+    <!-- Layout principal -->
+    <main class="flex flex-col items-center justify-center h-full w-full z-10 px-4 pb-12 sm:pb-16 relative">
+        
+        <!-- LOGO CENTRAL ZERO SYSTEMS CON REACCIÓN 3D / TILT -->
+        <div class="logo-card-container my-4 sm:my-8 cursor-pointer" id="tilt-container">
+            <div class="relative group flex items-center justify-center">
+                <div class="glow-effect"></div>
+                <div id="tilt-card" class="logo-card relative p-3 sm:p-6 rounded-2xl sm:rounded-3xl backdrop-blur-sm flex items-center justify-center">
+                    
+                    <!-- SVG de ZERO SYSTEMS en el centro -->
+                    <svg class="hero-svg max-w-[260px] xs:max-w-[320px] sm:max-w-[440px] md:max-w-[520px]" viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Iso/Icono Zero Systems -->
+                        <g fill="#FFFFFF">
+                            <path d="M20,65 L110,65 C125,65 130,58 135,48 L142,32 C145,25 140,20 128,20 L40,20 C25,20 20,27 15,37 L8,52 C5,59 10,65 20,65 Z" />
+                            <path d="M50,95 L140,95 C155,95 160,88 165,78 L172,62 C175,55 170,50 158,50 L70,50 C55,50 50,57 45,67 L38,82 C35,89 40,95 50,95 Z" />
+                            <path d="M140,15 L52,105" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+                        </g>
+                        <!-- Texto Marca -->
+                        <text x="180" y="62" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="38" fill="#FFFFFF" letter-spacing="2">ZERO SYSTEMS</text>
+                        <text x="183" y="94" font-family="'Montserrat', sans-serif" font-weight="600" font-style="italic" font-size="22" fill="#E0E0E0" letter-spacing="7">CERO LÍMITES</text>
+                    </svg>
 
-            <!-- FOTO DE PERFIL TOTALMENTE CIRCULAR -->
-            <div class="relative group mb-5">
-                <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-amber-500 via-red-600 to-amber-500 opacity-75 blur transition duration-500 group-hover:opacity-100"></div>
-                <div class="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-neutral-950 shadow-2xl">
-                    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/maestro-3d-icon-png-download-10199756.png" alt="Abel Sangabriel Mejía" class="w-full h-full object-cover">
-                </div>
-                <span class="absolute bottom-1 right-2 bg-emerald-500 border-4 border-neutral-950 w-6 h-6 rounded-full" title="Disponible para Ventas"></span>
-            </div>
-
-            <!-- Información Personal -->
-            <h1 class="text-3xl sm:text-4xl font-black font-display tracking-tight text-white uppercase">
-                Abel Sangabriel Mejía
-            </h1>
-            <p class="text-amber-500 font-bold text-sm sm:text-base tracking-wide uppercase mt-1">
-                Gerente Comercial
-            </p>
-            <p class="text-xs sm:text-sm text-stone-400 max-w-xl mt-2 leading-relaxed">
-                Especialista en distribución de cortes finos de res, cerdo y aves para restaurantes, hoteles y cadenas gastronómicas a nivel nacional.
-            </p>
-
-            <!-- Acciones Rápidas -->
-            <div class="flex flex-wrap justify-center items-center gap-3 mt-6 w-full max-w-md">
-                <a href="https://wa.me/525515901980?text=Hola%20Abel,%20me%20interesa%20una%20cotizaci%C3%B3n%20de%20TITAN%20MEATS" target="_blank" 
-                   class="flex-1 py-3 px-5 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 transition active:scale-95">
-                    <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp
-                </a>
-                <button onclick="downloadVCard()" 
-                        class="py-3 px-5 rounded-2xl bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition active:scale-95">
-                    <i class="fa-solid fa-address-card text-amber-400"></i> Guardar VCard
-                </button>
-            </div>
-
-            <!-- Contact Grid Compacto -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full max-w-lg mt-6 pt-6 border-t border-stone-800/60 text-xs">
-                <a href="tel:+525515901980" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-stone-900/50 border border-stone-800 hover:border-amber-500/40 transition text-stone-300">
-                    <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center"><i class="fa-solid fa-phone text-xs"></i></div>
-                    <span class="truncate font-semibold">+52 55 1590 1980</span>
-                </a>
-                <a href="mailto:abel@titanmeats.com" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-stone-900/50 border border-stone-800 hover:border-red-500/40 transition text-stone-300">
-                    <div class="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center"><i class="fa-solid fa-envelope text-xs"></i></div>
-                    <span class="truncate font-semibold">Correo Ventas</span>
-                </a>
-                <div class="col-span-2 sm:col-span-1 flex items-center gap-2.5 p-2.5 rounded-xl bg-stone-900/50 border border-stone-800 text-stone-300">
-                    <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-truck-fast text-xs"></i></div>
-                    <span class="truncate font-semibold">Envíos Mayoreo</span>
                 </div>
             </div>
-
-        </div>
-    </header>
-
-    <!-- Contenido Principal / Catálogo -->
-    <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 space-y-6">
-
-        <!-- Buscador y Categorías Modernas -->
-        <div class="space-y-4">
-            <div class="relative">
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 text-sm"></i>
-                <input type="text" id="searchInput" oninput="filterProducts()" placeholder="Buscar cortes (Ej: Ribeye, Wagyu, Picanha)..." 
-                    class="w-full pl-11 pr-10 py-3.5 bg-stone-900/80 border border-stone-800 rounded-2xl text-stone-100 placeholder-stone-500 text-xs sm:text-sm focus:outline-none focus:border-amber-500 transition shadow-inner">
-                <button id="clearSearch" onclick="clearSearch()" class="hidden absolute right-4 top-1/2 -translate-y-1/2 text-stone-500 hover:text-stone-200">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- Pestañas de Filtrado por Categoría -->
-            <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="categoryTabs">
-                <button onclick="filterCategory('all')" class="cat-btn active px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-amber-500 text-neutral-950 transition">
-                    Todos los Productos
-                </button>
-                <button onclick="filterCategory('res')" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-stone-900 text-stone-400 hover:text-white border border-stone-800 transition">
-                    🥩 Res Premium
-                </button>
-                <button onclick="filterCategory('cerdo')" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-stone-900 text-stone-400 hover:text-white border border-stone-800 transition">
-                    🥓 Cerdo & Aves
-                </button>
-                <button onclick="filterCategory('procesados')" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-stone-900 text-stone-400 hover:text-white border border-stone-800 transition">
-                    🍔 Embutidos & Burger
-                </button>
-            </div>
         </div>
 
-        <!-- Grid de Catálogo -->
-        <div id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- Items insertados con JS -->
-        </div>
+        <!-- Título interactivo 'COMING SOON' con animación de letras independientes -->
+        <h1 id="kinetic-title" class="text-3xl xs:text-4xl sm:text-6xl md:text-7xl font-black tracking-wider sm:tracking-widest text-center uppercase flex flex-wrap justify-center gap-x-2 sm:gap-x-6 gap-y-1 mt-2 sm:mt-4 mb-2">
+            <!-- Las letras son inyectadas dinámicamente con JavaScript -->
+        </h1>
 
+        <!-- Subtítulo / Indicador sutil minimalista -->
+        <p id="interactive-hint" class="text-[9px] sm:text-xs tracking-[0.3em] sm:tracking-[0.5em] uppercase text-gray-400 font-light mt-2 sm:mt-4 animate-pulse text-center">
+            [ Interactúa con la pantalla ]
+        </p>
     </main>
 
-    <!-- Modal Detalle del Producto -->
-    <div id="productModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-neutral-950/80 backdrop-blur-md opacity-0 transition-opacity duration-300">
-        <div class="bg-stone-900 w-full max-w-lg rounded-3xl border border-stone-700 shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="modalContent">
-            
-            <div class="relative h-48 sm:h-56 bg-stone-950 overflow-hidden">
-                <img id="modalImage" src="" alt="" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-stone-900 via-transparent to-transparent"></div>
-                <button onclick="closeProductModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-neutral-950/60 text-stone-300 hover:text-white flex items-center justify-center backdrop-blur-md border border-stone-700">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <span id="modalCode" class="absolute bottom-4 left-4 px-3 py-1 rounded-lg bg-red-600/90 text-white font-extrabold text-[10px] tracking-wider uppercase"></span>
-            </div>
-
-            <div class="p-6 overflow-y-auto space-y-5 flex-1 text-stone-300 text-xs sm:text-sm">
-                <div>
-                    <h3 id="modalTitle" class="text-xl sm:text-2xl font-black font-display text-white uppercase"></h3>
-                    <p id="modalSubtitle" class="text-amber-500 font-bold text-xs mt-0.5"></p>
-                </div>
-
-                <p id="modalDescription" class="leading-relaxed text-stone-400 border-b border-stone-800 pb-4"></p>
-
-                <div class="space-y-2">
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
-                        <i class="fa-solid fa-boxes-stacked"></i> Presentaciones
-                    </h4>
-                    <div id="modalSubproductsList" class="grid grid-cols-1 gap-2"></div>
-                </div>
-
-                <div class="space-y-2">
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-red-400 flex items-center gap-2">
-                        <i class="fa-solid fa-fire"></i> Métodos de Cocción
-                    </h4>
-                    <ul id="modalIndicationsList" class="flex flex-wrap gap-1.5"></ul>
-                </div>
-            </div>
-
-            <div class="p-4 bg-stone-950 border-t border-stone-800 flex items-center justify-between">
-                <span class="text-[11px] text-stone-500">TITAN MEATS ®</span>
-                <a id="modalQuoteBtn" href="#" target="_blank" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs rounded-xl transition flex items-center gap-2">
-                    <i class="fa-brands fa-whatsapp"></i> Cotizar este corte
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- FOOTER -->
+    <!-- FOOTER SOLICITADO -->
     <footer>
         <div class="footer-credits">
             <span>created by</span>
             <a href="https://j05ulr.github.io/ZeroSystems/" target="_blank" rel="noopener noreferrer" class="zero-systems-logo">
-                <svg class="zero-systems-svg" viewBox="0 0 520 120" xmlns="http://www.w3.org/2000/svg">
+                <svg class="zero-systems-svg" viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg">
                     <!-- Iso/Icono Zero Systems -->
                     <g fill="#FFFFFF">
                         <path d="M20,65 L110,65 C125,65 130,58 135,48 L142,32 C145,25 140,20 128,20 L40,20 C25,20 20,27 15,37 L8,52 C5,59 10,65 20,65 Z" />
@@ -261,257 +274,296 @@
                         <path d="M140,15 L52,105" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
                     </g>
                     <!-- Texto Marca -->
-                    <text x="180" y="62" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="40" fill="#FFFFFF" letter-spacing="3">ZERO SYSTEMS</text>
-                    <text x="183" y="94" font-family="'Montserrat', sans-serif" font-weight="600" font-style="italic" font-size="22" fill="#E0E0E0" letter-spacing="8">CERO LÍMITES</text>
+                    <text x="180" y="62" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="38" fill="#FFFFFF" letter-spacing="2">ZERO SYSTEMS</text>
+                    <text x="183" y="94" font-family="'Montserrat', sans-serif" font-weight="600" font-style="italic" font-size="22" fill="#E0E0E0" letter-spacing="7">CERO LÍMITES</text>
                 </svg>
             </a>
         </div>
     </footer>
 
     <script>
-        const catalogData = [
-            {
-                id: 'ribeye',
-                category: 'res',
-                title: 'Ribeye Prime Titan',
-                code: 'CHOICE / PRIME',
-                subtitle: 'Corte del Lomo Ancho',
-                icon: 'fa-drumstick-bite',
-                img: 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&q=80&w=600',
-                description: 'Excelente marmoleo y jugosidad sobresaliente. Uno de los cortes más demandados en la alta gastronomía parrillera.',
-                subproducts: [
-                    { name: 'Cowboy Steak', desc: 'Con hueso corto, grosor 1.5 a 2 pulgadas.' },
-                    { name: 'Ribeye Boneless', desc: 'Deshuesado y limpio listo para porcionar.' }
-                ],
-                indications: ['Parrilla a carbón', 'Término Medio', 'Sellar a fuego vivo']
-            },
-            {
-                id: 'tomahawk',
-                category: 'res',
-                title: 'Tomahawk Steak',
-                code: 'EXPORTATION',
-                subtitle: 'Ribeye con Hueso Largo',
-                icon: 'fa-bone',
-                img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600',
-                description: 'Impresionante presentación visual para restaurante. Hueso entero expuesto estilo francés para un sabor intenso.',
-                subproducts: [
-                    { name: 'Pieza Individual', desc: 'Peso aproximado entre 1.1 kg a 1.4 kg.' }
-                ],
-                indications: ['Parrilla indirecta', 'Ahumado', 'Horno']
-            },
-            {
-                id: 'picanha',
-                category: 'res',
-                title: 'Picanha Angus',
-                code: 'ANGUS CERTIFIED',
-                subtitle: 'Tapa de Aguayón',
-                icon: 'fa-utensils',
-                img: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&q=80&w=600',
-                description: 'Corte estrella con una capa de grasa perfecta que aporta un sabor único al derretirse en la cocción.',
-                subproducts: [
-                    { name: 'Picanha Entera', desc: 'Piezas calibradas de 1.2 kg a 1.5 kg.' },
-                    { name: 'Medallones', desc: 'Corte transversal para espadas.' }
-                ],
-                indications: ['Espadas / Spiedo', 'Ahumado', 'Parrilla']
-            },
-            {
-                id: 'babyback',
-                category: 'cerdo',
-                title: 'Baby Back Ribs',
-                code: 'CERDO SELECTO',
-                subtitle: 'Costilla de Lomo de Cerdo',
-                icon: 'fa-burger',
-                img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600',
-                description: 'Costillas tiernas y carnosas. Absorción óptima de sazonadores secos (rubs) y salsas barbacoa.',
-                subproducts: [
-                    { name: 'Rack Entero', desc: 'Calibrado de 1.8 a 2.2 lbs.' }
-                ],
-                indications: ['Ahumado BBQ', 'Cocción Lenta', 'Horno']
-            },
-            {
-                id: 'wings',
-                category: 'cerdo',
-                title: 'Alitas IQF Jumbo',
-                code: 'CONGELADO INDIVIDUAL',
-                subtitle: 'Aves para Hostelería',
-                icon: 'fa-drumstick-bite',
-                img: 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&q=80&w=600',
-                description: 'Alitas seleccionadas porcionadas en Flat y Drumette, listas para freír o freidora de aire sin desperdicio.',
-                subproducts: [
-                    { name: 'Caja Mayoreo 10kg', desc: 'Empaque IQF de fácil manejo.' }
-                ],
-                indications: ['Fritura Profunda', 'Parrilla', 'Salsas']
-            },
-            {
-                id: 'chorizo',
-                category: 'procesados',
-                title: 'Chorizo Argentino',
-                code: 'RECETA ARTESANAL',
-                subtitle: 'Embutido de Cerdo & Especias',
-                icon: 'fa-hotdog',
-                img: 'https://images.unsplash.com/photo-1585325701165-351af916e581?auto=format&fit=crop&q=80&w=600',
-                description: 'Elaborado con 100% carne de cerdo picada, vino blanco y especias finas. Ideal para entradas o choripán.',
-                subproducts: [
-                    { name: 'Paquete 1kg', desc: 'Atado artesanal listo para asador.' }
-                ],
-                indications: ['Asador a fuego medio', 'Choripán']
-            }
-        ];
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        
+        // Ajustar mensaje interactivo si es táctil
+        if (isTouchDevice) {
+            const hint = document.getElementById('interactive-hint');
+            if (hint) hint.innerText = '[ Toca la pantalla para interactuar ]';
+        }
 
-        let selectedCategory = 'all';
+        /* ==========================================
+           1. CANVAS DE FONDO REACTIVO (OPTIMIZADO)
+           ========================================== */
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
 
-        function renderCatalog() {
-            const grid = document.getElementById('catalogGrid');
-            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
-            const clearBtn = document.getElementById('clearSearch');
+        let width, height;
+        let mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, radius: isTouchDevice ? 140 : 200 };
 
-            if (searchVal) clearBtn.classList.remove('hidden');
-            else clearBtn.classList.add('hidden');
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initParticles();
+        }
 
-            const filtered = catalogData.filter(item => {
-                const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-                const matchesSearch = !searchVal || 
-                    item.title.toLowerCase().includes(searchVal) ||
-                    item.subtitle.toLowerCase().includes(searchVal) ||
-                    item.description.toLowerCase().includes(searchVal);
-                return matchesCategory && matchesSearch;
-            });
-
-            grid.innerHTML = '';
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full py-12 text-center text-stone-500 space-y-2">
-                        <i class="fa-solid fa-magnifying-glass text-3xl text-stone-600"></i>
-                        <p class="font-bold text-stone-300">Sin productos encontrados</p>
-                        <p class="text-xs">Intenta con otra búsqueda o categoría.</p>
-                    </div>
-                `;
-                return;
+        class Particle {
+            constructor(x, y) {
+                this.originX = x;
+                this.originY = y;
+                this.x = x;
+                this.y = y;
+                this.vx = 0;
+                this.vy = 0;
+                this.size = Math.random() * (isTouchDevice ? 1.5 : 2) + 1;
+                this.baseAlpha = Math.random() * 0.35 + 0.1;
+                this.alpha = this.baseAlpha;
             }
 
-            filtered.forEach(item => {
-                const card = document.createElement('div');
-                card.className = "bg-stone-900/90 border border-stone-800 rounded-2xl overflow-hidden p-4 card-hover-effect cursor-pointer flex flex-col justify-between group";
-                card.onclick = () => openProductModal(item.id);
+            update() {
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
 
-                card.innerHTML = `
-                    <div>
-                        <div class="relative h-36 rounded-xl overflow-hidden mb-3 bg-stone-950">
-                            <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            <span class="absolute top-2 left-2 px-2.5 py-0.5 rounded-md bg-neutral-950/80 backdrop-blur-md border border-stone-700 text-[9px] font-extrabold text-amber-400">
-                                ${item.code}
-                            </span>
-                        </div>
-                        <h4 class="text-base font-black font-display text-white group-hover:text-amber-400 transition">${item.title}</h4>
-                        <p class="text-xs font-semibold text-amber-500/90 mb-1.5">${item.subtitle}</p>
-                        <p class="text-xs text-stone-400 line-clamp-2 leading-relaxed">${item.description}</p>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-stone-800/80 flex items-center justify-between text-xs">
-                        <span class="text-[11px] font-bold text-stone-500">${item.subproducts.length} Variantes</span>
-                        <span class="text-xs font-bold text-amber-400 flex items-center gap-1">
-                            Ver más <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition"></i>
-                        </span>
-                    </div>
-                `;
-                grid.appendChild(card);
+                if (dist < mouse.radius) {
+                    const force = (mouse.radius - dist) / mouse.radius;
+                    const angle = Math.atan2(dy, dx);
+                    const pushFactor = isTouchDevice ? 35 : 50;
+                    const pushX = -Math.cos(angle) * force * pushFactor;
+                    const pushY = -Math.sin(angle) * force * pushFactor;
+
+                    this.vx += pushX;
+                    this.vy += pushY;
+                    this.alpha = Math.min(1, this.baseAlpha + force * 0.8);
+                } else {
+                    this.alpha += (this.baseAlpha - this.alpha) * 0.05;
+                }
+
+                const homeDx = this.originX - this.x;
+                const homeDy = this.originY - this.y;
+                this.vx += homeDx * 0.03;
+                this.vy += homeDy * 0.03;
+
+                this.vx *= 0.85;
+                this.vy *= 0.85;
+
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        let particles = [];
+        function initParticles() {
+            particles = [];
+            // Densidad adaptativa: Menos partículas en pantallas pequeñas para optimizar rendimiento
+            const baseSpacing = isTouchDevice ? 45 : 35;
+            const spacing = Math.max(baseSpacing, Math.floor(Math.min(width, height) / (isTouchDevice ? 18 : 25)));
+            
+            for (let x = 0; x < width; x += spacing) {
+                for (let y = 0; y < height; y += spacing) {
+                    particles.push(new Particle(x, y));
+                }
+            }
+        }
+
+        function drawConnections() {
+            const maxDist = isTouchDevice ? 55 : 75;
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < maxDist) {
+                        const alpha = (1 - dist / maxDist) * 0.12;
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            
+            mouse.x += (mouse.targetX - mouse.x) * 0.1;
+            mouse.y += (mouse.targetY - mouse.y) * 0.1;
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            drawConnections();
+            requestAnimationFrame(animateCanvas);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        /* ==========================================
+           2. TIPOGRAFÍA DINÁMICA DE "COMING SOON"
+           ========================================== */
+        const titleContainer = document.getElementById('kinetic-title');
+        const words = ["COMING", "SOON"];
+        let letterElements = [];
+
+        function buildKineticText() {
+            titleContainer.innerHTML = '';
+            letterElements = [];
+
+            words.forEach((wordText) => {
+                const wordSpan = document.createElement('span');
+                wordSpan.className = 'inline-block whitespace-nowrap';
+
+                wordText.split('').forEach((char) => {
+                    const letterSpan = document.createElement('span');
+                    letterSpan.innerText = char;
+                    letterSpan.className = 'kinetic-letter';
+                    letterSpan.dataset.char = char;
+                    
+                    letterSpan.state = {
+                        offsetX: 0,
+                        offsetY: 0,
+                        scale: 1,
+                        rotZ: 0
+                    };
+
+                    wordSpan.appendChild(letterSpan);
+                    letterElements.push(letterSpan);
+                });
+
+                titleContainer.appendChild(wordSpan);
             });
         }
 
-        function filterCategory(cat) {
-            selectedCategory = cat;
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                btn.className = "cat-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-stone-900 text-stone-400 hover:text-white border border-stone-800 transition";
+        buildKineticText();
+
+        let time = 0;
+        function animateTypography() {
+            time += 0.035;
+
+            letterElements.forEach((el, index) => {
+                const st = el.state;
+                
+                const waveY = Math.sin(time + index * 0.4) * (isTouchDevice ? 6 : 10);
+                const waveX = Math.cos(time * 0.7 + index * 0.3) * (isTouchDevice ? 2.5 : 4);
+                const waveRot = Math.sin(time * 0.5 + index * 0.2) * (isTouchDevice ? 4 : 6);
+
+                const rect = el.getBoundingClientRect();
+                const letterCenterX = rect.left + rect.width / 2;
+                const letterCenterY = rect.top + rect.height / 2;
+
+                const dx = mouse.x - letterCenterX;
+                const dy = mouse.y - letterCenterY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const maxRepelDist = isTouchDevice ? 90 : 140;
+
+                let repelX = 0;
+                let repelY = 0;
+                let repelScale = 1;
+                let repelRotZ = 0;
+
+                if (dist < maxRepelDist) {
+                    const factor = (1 - dist / maxRepelDist);
+                    const angle = Math.atan2(dy, dx);
+                    const repelForce = isTouchDevice ? 35 : 55;
+                    repelX = -Math.cos(angle) * factor * repelForce;
+                    repelY = -Math.sin(angle) * factor * repelForce;
+                    repelScale = 1 + factor * (isTouchDevice ? 0.2 : 0.35);
+                    repelRotZ = -Math.cos(angle) * factor * (isTouchDevice ? 12 : 20);
+                }
+
+                st.offsetX += (repelX - st.offsetX) * 0.15;
+                st.offsetY += (repelY - st.offsetY) * 0.15;
+                st.scale += (repelScale - st.scale) * 0.15;
+                st.rotZ += (repelRotZ - st.rotZ) * 0.15;
+
+                const totalX = waveX + st.offsetX;
+                const totalY = waveY + st.offsetY;
+                const totalRot = waveRot + st.rotZ;
+
+                el.style.transform = `translate3d(${totalX}px, ${totalY}px, 0px) scale(${st.scale}) rotate(${totalRot}deg)`;
             });
-            event.currentTarget.className = "cat-btn active px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-amber-500 text-neutral-950 transition";
-            renderCatalog();
+
+            requestAnimationFrame(animateTypography);
         }
 
-        function filterProducts() {
-            renderCatalog();
+        /* ==========================================
+           3. INTERACCIÓN DE RATÓN Y TILT 3D LOGO
+           ========================================== */
+        const mouseLight = document.getElementById('mouse-light');
+        const tiltContainer = document.getElementById('tilt-container');
+        const tiltCard = document.getElementById('tilt-card');
+
+        let touchTimeout;
+
+        function handlePointerMove(e) {
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+            if (clientX !== undefined && clientY !== undefined) {
+                mouse.targetX = clientX;
+                mouse.targetY = clientY;
+
+                if (!isTouchDevice) {
+                    mouseLight.classList.add('active');
+                    mouseLight.style.left = `${clientX}px`;
+                    mouseLight.style.top = `${clientY}px`;
+                }
+
+                // Tilt 3D
+                const rect = tiltContainer.getBoundingClientRect();
+                const cardCenterX = rect.left + rect.width / 2;
+                const cardCenterY = rect.top + rect.height / 2;
+
+                const cardDx = clientX - cardCenterX;
+                const cardDy = clientY - cardCenterY;
+
+                const maxRotation = isTouchDevice ? 10 : 20;
+                const rotateX = (-cardDy / (rect.height / 2)) * maxRotation;
+                const rotateY = (cardDx / (rect.width / 2)) * maxRotation;
+
+                const scaleVal = isTouchDevice ? 1.03 : 1.06;
+                tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(${scaleVal}, ${scaleVal}, ${scaleVal})`;
+
+                // Si es táctil, resetear posición después de dejar de tocar
+                if (isTouchDevice) {
+                    clearTimeout(touchTimeout);
+                    touchTimeout = setTimeout(handlePointerLeave, 1500);
+                }
+            }
         }
 
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            renderCatalog();
+        function handlePointerLeave() {
+            mouse.targetX = -1000;
+            mouse.targetY = -1000;
+            mouseLight.classList.remove('active');
+            tiltCard.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
         }
 
-        function openProductModal(id) {
-            const item = catalogData.find(i => i.id === id);
-            if (!item) return;
+        // Listeners adaptativos
+        window.addEventListener('mousemove', handlePointerMove);
+        window.addEventListener('touchstart', handlePointerMove, { passive: true });
+        window.addEventListener('touchmove', handlePointerMove, { passive: true });
+        window.addEventListener('touchend', handlePointerLeave);
+        document.body.addEventListener('mouseleave', handlePointerLeave);
 
-            document.getElementById('modalTitle').innerText = item.title;
-            document.getElementById('modalSubtitle').innerText = item.subtitle;
-            document.getElementById('modalCode').innerText = item.code;
-            document.getElementById('modalDescription').innerText = item.description;
-            document.getElementById('modalImage').src = item.img;
-
-            const subList = document.getElementById('modalSubproductsList');
-            subList.innerHTML = '';
-            item.subproducts.forEach(sub => {
-                subList.innerHTML += `
-                    <div class="bg-stone-950 p-2.5 rounded-xl border border-stone-800">
-                        <p class="font-bold text-xs text-amber-400">${sub.name}</p>
-                        <p class="text-[11px] text-stone-400 mt-0.5">${sub.desc}</p>
-                    </div>
-                `;
-            });
-
-            const indList = document.getElementById('modalIndicationsList');
-            indList.innerHTML = '';
-            item.indications.forEach(ind => {
-                indList.innerHTML += `
-                    <li class="px-2.5 py-1 bg-red-950/60 border border-red-800/60 text-red-400 rounded-lg text-[11px] font-semibold flex items-center gap-1">
-                        <i class="fa-solid fa-check text-[9px]"></i> ${ind}
-                    </li>
-                `;
-            });
-
-            document.getElementById('modalQuoteBtn').href = `https://wa.me/525515901980?text=Hola%20Abel,%20deseo%20cotizar:%20${encodeURIComponent(item.title)}`;
-
-            const modal = document.getElementById('productModal');
-            const content = document.getElementById('modalContent');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                content.classList.remove('scale-95');
-                content.classList.add('scale-100');
-            }, 10);
-        }
-
-        function closeProductModal() {
-            const modal = document.getElementById('productModal');
-            const content = document.getElementById('modalContent');
-            modal.classList.add('opacity-0');
-            content.classList.remove('scale-100');
-            content.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        }
-
-        function downloadVCard() {
-            const vcardContent = `BEGIN:VCARD
-VERSION:3.0
-N:Sangabriel Mejía;Abel;;;
-FN:Abel Sangabriel Mejía
-TITLE:Gerente de Ventas
-ORG:TITAN MEATS
-TEL;TYPE=CELL:+525515901980
-EMAIL:ventas@titanmeats.com
-END:VCARD`;
-
-            const blob = new Blob([vcardContent], { type: 'text/vcard;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.setAttribute('download', 'Abel_Sangabriel_TITAN_MEATS.vcf');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
+        /* ==========================================
+           4. INICIALIZACIÓN
+           ========================================== */
         window.onload = function() {
-            renderCatalog();
+            resizeCanvas();
+            animateCanvas();
+            animateTypography();
         };
     </script>
 </body>
