@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMING SOON</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #030305;
+            color: #ffffff;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Canvas de fondo */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Halo interactivo seguidor del ratón */
+        .mouse-light {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(59, 130, 246, 0.08) 40%, rgba(0, 0, 0, 0) 70%);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            transition: width 0.3s, height 0.3s;
+            mix-blend-mode: screen;
+        }
+
+        /* Estilo general para letras animadas */
+        .kinetic-letter {
+            display: inline-block;
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s, text-shadow 0.3s;
+            cursor: pointer;
+            will-change: transform;
+            position: relative;
+        }
+
+        .kinetic-letter:hover {
+            color: #c084fc;
+            text-shadow: 0 0 20px rgba(192, 132, 252, 0.8), 0 0 40px rgba(192, 132, 252, 0.4);
+        }
+
+        /* Contenedor e Imagen interactiva 3D */
+        .image-card-container {
+            perspective: 1000px;
+            z-index: 10;
+        }
+
+        .image-card {
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out, box-shadow 0.3s;
+            will-change: transform;
+        }
+
+        .image-card img {
+            transition: filter 0.4s ease, transform 0.4s ease;
+        }
+
+        .image-card:hover img {
+            filter: brightness(1.15) contrast(1.1) saturate(1.2);
+            transform: scale(1.03);
+        }
+
+        /* Resplandor detrás de la imagen */
+        .glow-effect {
+            position: absolute;
+            inset: -4px;
+            border-radius: 1.5rem;
+            background: linear-gradient(45deg, #a855f7, #3b82f6, #ec4899, #3b82f6);
+            background-size: 300% 300%;
+            animation: gradientGlow 6s ease infinite;
+            filter: blur(20px);
+            opacity: 0.4;
+            z-index: -1;
+            transition: opacity 0.3s, filter 0.3s;
+        }
+
+        .image-card-container:hover .glow-effect {
+            opacity: 0.85;
+            filter: blur(28px);
+        }
+
+        @keyframes gradientGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Scanlines estéticas ultra sutiles */
+        .scanline-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-between min-h-screen w-full relative overflow-hidden select-none">
+
+    <!-- Fondo interactivo de partículas en canvas -->
+    <canvas id="bg-canvas"></canvas>
+    
+    <!-- Luz flotante seguidora de puntero -->
+    <div id="mouse-light" class="mouse-light"></div>
+    
+    <!-- Overlay de líneas de escaneo estilo minimal cyber/high-tech -->
+    <div class="scanline-overlay"></div>
+
+    <!-- Layout principal -->
+    <main class="flex flex-col items-center justify-center min-h-screen w-full z-10 px-4 relative">
+        
+        <!-- Tarjeta de Imagen Central con efecto 3D Parallax/Tilt -->
+        <div class="image-card-container mb-10 cursor-pointer" id="tilt-container">
+            <div class="relative group">
+                <div class="glow-effect"></div>
+                <div id="tilt-card" class="image-card relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-2xl overflow-hidden border border-white/10 bg-black/40 backdrop-blur-md shadow-2xl flex items-center justify-center p-2">
+                    <img 
+                        id="main-img"
+                        src="https://scontent.fmex27-1.fna.fbcdn.net/v/t39.30808-6/807699310_2630943230708882_4646624149915684074_n.jpg?stp=dst-jpg_tt6&cstp=mx1106x873&ctp=s512x512&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeE9QmcRDZrsVW4PdlvNwqHEVdyVwjdIYNhV3JXCN0hg2N30E-txiWmtaWezvmedpcIAzr-PQAG6tI4MvCAMRfcD&_nc_ohc=EMR2qUZ2KVYQ7kNvwGDYUdA&_nc_oc=AdqqaEpXCHwA2XkL2HHp6rmlh8Sz4aACIJ8BRJ7lsFgLiTfZJXqLIaxigjaeUu8AeHWK__sEFKO1HGJDHUsUIElK&_nc_zt=23&_nc_ht=scontent.fmex27-1.fna&_nc_gid=FSDz8KVByxJJcgoFWfEpyw&_nc_ss=7b2a8&oh=00_AQKywXJnP8x8pbFwvxB55rogn-S5NpGItCT0555uMjSUgw&oe=6AB3DFF4" 
+                        alt="Central Coming Soon Graphic"
+                        class="w-full h-full object-cover rounded-xl shadow-lg"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x600/0d0d12/a855f7?text=COMING+SOON';"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <!-- Título interactivo 'COMING SOON' con animación de letras independientes -->
+        <h1 id="kinetic-title" class="text-4xl sm:text-6xl md:text-8xl font-black tracking-widest text-center uppercase flex flex-wrap justify-center gap-x-3 sm:gap-x-6 gap-y-2 my-2">
+            <!-- Las letras son inyectadas dinámicamente con JavaScript -->
+        </h1>
+
+        <!-- Subtítulo / Indicador sutil minimalista -->
+        <p class="text-xs sm:text-sm tracking-[0.4em] uppercase text-gray-400 font-light mt-6 animate-pulse">
+            [ Mueve el ratón para interactuar ]
+        </p>
+    </main>
+
+    <!-- Footer sutil -->
+    <footer class="absolute bottom-4 z-10 text-[10px] tracking-widest text-gray-600 uppercase">
+        © COMING SOON • ALL RIGHTS RESERVED
+    </footer>
+
+    <script>
+        /* ==========================================
+           1. CANVAS DE FONDO REACTIVO AL RATÓN (GRID & PARTICLES)
+           ========================================== */
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, radius: 180 };
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initParticles();
+        }
+
+        class Particle {
+            constructor(x, y) {
+                this.originX = x;
+                this.originY = y;
+                this.x = x;
+                this.y = y;
+                this.vx = 0;
+                this.vy = 0;
+                this.size = Math.random() * 2 + 1;
+                this.baseAlpha = Math.random() * 0.4 + 0.1;
+                this.alpha = this.baseAlpha;
+            }
+
+            update() {
+                // Calcular distancia al ratón
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                // Fuerza de repulsión reactiva
+                if (dist < mouse.radius) {
+                    const force = (mouse.radius - dist) / mouse.radius;
+                    const angle = Math.atan2(dy, dx);
+                    const pushX = -Math.cos(angle) * force * 45;
+                    const pushY = -Math.sin(angle) * force * 45;
+
+                    this.vx += pushX;
+                    this.vy += pushY;
+                    this.alpha = Math.min(1, this.baseAlpha + force * 0.7);
+                } else {
+                    this.alpha += (this.baseAlpha - this.alpha) * 0.05;
+                }
+
+                // Fuerza de retorno suave (muelle)
+                const homeDx = this.originX - this.x;
+                const homeDy = this.originY - this.y;
+                this.vx += homeDx * 0.03;
+                this.vy += homeDy * 0.03;
+
+                // Fricción
+                this.vx *= 0.85;
+                this.vy *= 0.85;
+
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(168, 85, 247, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        let particles = [];
+        function initParticles() {
+            particles = [];
+            const spacing = Math.max(35, Math.floor(Math.min(width, height) / 25));
+            for (let x = 0; x < width; x += spacing) {
+                for (let y = 0; y < height; y += spacing) {
+                    particles.push(new Particle(x, y));
+                }
+            }
+        }
+
+        function drawConnections() {
+            const maxDist = 70;
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < maxDist) {
+                        const alpha = (1 - dist / maxDist) * 0.15;
+                        ctx.strokeStyle = `rgba(147, 51, 234, ${alpha})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Interpola suavemente las coordenadas del ratón
+            mouse.x += (mouse.targetX - mouse.x) * 0.1;
+            mouse.y += (mouse.targetY - mouse.y) * 0.1;
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            drawConnections();
+            requestAnimationFrame(animateCanvas);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        /* ==========================================
+           2. TIPOGRAFÍA DINÁMICA RECONSTRUIDA ("COMING SOON")
+           ========================================== */
+        const titleContainer = document.getElementById('kinetic-title');
+        const words = ["COMING", "SOON"];
+        let letterElements = [];
+
+        function buildKineticText() {
+            titleContainer.innerHTML = '';
+            letterElements = [];
+
+            words.forEach((wordText, wordIndex) => {
+                const wordSpan = document.createElement('span');
+                wordSpan.className = 'inline-block whitespace-nowrap';
+
+                wordText.split('').forEach((char, charIndex) => {
+                    const letterSpan = document.createElement('span');
+                    letterSpan.innerText = char;
+                    letterSpan.className = 'kinetic-letter';
+                    letterSpan.dataset.char = char;
+                    
+                    // Almacenar estado de animación propio
+                    letterSpan.state = {
+                        baseX: 0,
+                        baseY: 0,
+                        offsetX: 0,
+                        offsetY: 0,
+                        rotX: 0,
+                        rotY: 0,
+                        rotZ: 0,
+                        scale: 1,
+                        phase: Math.random() * Math.PI * 2
+                    };
+
+                    wordSpan.appendChild(letterSpan);
+                    letterElements.push(letterSpan);
+                });
+
+                titleContainer.appendChild(wordSpan);
+            });
+        }
+
+        buildKineticText();
+
+        // Bucle continuo para la animación flotante ondulatoria de cada letra
+        let time = 0;
+        function animateTypography() {
+            time += 0.03;
+
+            letterElements.forEach((el, index) => {
+                const st = el.state;
+                
+                // Movimiento senoidal continuo (ondas flotantes)
+                const waveY = Math.sin(time + index * 0.4) * 12;
+                const waveX = Math.cos(time * 0.8 + index * 0.3) * 5;
+                const waveRot = Math.sin(time * 0.5 + index * 0.2) * 8;
+
+                // Reacción por proximidad del cursor a cada letra
+                const rect = el.getBoundingClientRect();
+                const letterCenterX = rect.left + rect.width / 2;
+                const letterCenterY = rect.top + rect.height / 2;
+
+                const dx = mouse.x - letterCenterX;
+                const dy = mouse.y - letterCenterY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const maxRepelDist = 150;
+
+                let repelX = 0;
+                let repelY = 0;
+                let repelScale = 1;
+                let repelRotZ = 0;
+
+                if (dist < maxRepelDist) {
+                    const factor = (1 - dist / maxRepelDist);
+                    const angle = Math.atan2(dy, dx);
+                    repelX = -Math.cos(angle) * factor * 50;
+                    repelY = -Math.sin(angle) * factor * 50;
+                    repelScale = 1 + factor * 0.4;
+                    repelRotZ = -Math.cos(angle) * factor * 25;
+                }
+
+                // Interpolación suave del movimiento
+                st.offsetX += (repelX - st.offsetX) * 0.15;
+                st.offsetY += (repelY - st.offsetY) * 0.15;
+                st.scale += (repelScale - st.scale) * 0.15;
+                st.rotZ += (repelRotZ - st.rotZ) * 0.15;
+
+                const totalX = waveX + st.offsetX;
+                const totalY = waveY + st.offsetY;
+                const totalRot = waveRot + st.rotZ;
+
+                el.style.transform = `translate3d(${totalX}px, ${totalY}px, 0px) scale(${st.scale}) rotate(${totalRot}deg)`;
+            });
+
+            requestAnimationFrame(animateTypography);
+        }
+
+        /* ==========================================
+           3. INTERACCIÓN DE RATÓN Y EFECTO TILT 3D
+           ========================================== */
+        const mouseLight = document.getElementById('mouse-light');
+        const tiltContainer = document.getElementById('tilt-container');
+        const tiltCard = document.getElementById('tilt-card');
+
+        function handlePointerMove(e) {
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+            if (clientX !== undefined && clientY !== undefined) {
+                mouse.targetX = clientX;
+                mouse.targetY = clientY;
+
+                // Mover halo de luz
+                mouseLight.style.left = `${clientX}px`;
+                mouseLight.style.top = `${clientY}px`;
+
+                // Tilt 3D para la tarjeta de imagen central
+                const rect = tiltContainer.getBoundingClientRect();
+                const cardCenterX = rect.left + rect.width / 2;
+                const cardCenterY = rect.top + rect.height / 2;
+
+                const cardDx = clientX - cardCenterX;
+                const cardDy = clientY - cardCenterY;
+
+                const rotateX = (-cardDy / (rect.height / 2)) * 18; // Invertir Y para inclinación natural
+                const rotateY = (cardDx / (rect.width / 2)) * 18;
+
+                tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+            }
+        }
+
+        function handlePointerLeave() {
+            mouse.targetX = -1000;
+            mouse.targetY = -1000;
+            tiltCard.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        }
+
+        // Event listeners para escritorio y pantalla táctil
+        window.addEventListener('mousemove', handlePointerMove);
+        window.addEventListener('touchmove', handlePointerMove, { passive: true });
+        document.body.addEventListener('mouseleave', handlePointerLeave);
+
+        /* ==========================================
+           4. INICIALIZACIÓN AL Cargar
+           ========================================== */
+        window.onload = function() {
+            resizeCanvas();
+            animateCanvas();
+            animateTypography();
+        };
+    </script>
+</body>
+</html>
