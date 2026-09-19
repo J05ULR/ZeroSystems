@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full w-full overflow-hidden">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COMING SOON</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>COMING SOON | ZERO SYSTEMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,700;0,900;1,600&family=Space+Grotesk:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Space Grotesk', 'Montserrat', sans-serif;
             background-color: #030305;
             color: #ffffff;
-            overflow: hidden;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* Canvas de fondo */
@@ -24,97 +24,196 @@
             left: 0;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
             z-index: 0;
             pointer-events: none;
         }
 
-        /* Halo interactivo seguidor del ratón */
+        /* Halo interactivo seguidor del ratón (sólo desktop/hover) */
         .mouse-light {
             position: fixed;
-            width: 500px;
-            height: 500px;
+            width: 550px;
+            height: 550px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(59, 130, 246, 0.08) 40%, rgba(0, 0, 0, 0) 70%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(168, 85, 247, 0.08) 35%, rgba(0, 0, 0, 0) 70%);
             pointer-events: none;
             transform: translate(-50%, -50%);
             z-index: 1;
-            transition: width 0.3s, height 0.3s;
             mix-blend-mode: screen;
+            transition: opacity 0.3s ease, width 0.3s, height 0.3s;
+            opacity: 0;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .mouse-light.active {
+                opacity: 1;
+            }
         }
 
         /* Estilo general para letras animadas */
         .kinetic-letter {
             display: inline-block;
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s, text-shadow 0.3s;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s, text-shadow 0.3s;
             cursor: pointer;
             will-change: transform;
             position: relative;
         }
 
         .kinetic-letter:hover {
-            color: #c084fc;
-            text-shadow: 0 0 20px rgba(192, 132, 252, 0.8), 0 0 40px rgba(192, 132, 252, 0.4);
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 40px rgba(168, 85, 247, 0.6);
         }
 
-        /* Contenedor e Imagen interactiva 3D */
-        .image-card-container {
+        /* Contenedor del Logo Central e Interacción 3D */
+        .logo-card-container {
             perspective: 1000px;
             z-index: 10;
         }
 
-        .image-card {
+        .logo-card {
             transform-style: preserve-3d;
-            transition: transform 0.15s ease-out, box-shadow 0.3s;
+            transition: transform 0.15s ease-out, filter 0.3s ease;
             will-change: transform;
         }
 
-        .image-card img {
-            transition: filter 0.4s ease, transform 0.4s ease;
-        }
-
-        .image-card:hover img {
-            filter: brightness(1.15) contrast(1.1) saturate(1.2);
-            transform: scale(1.03);
-        }
-
-        /* Resplandor detrás de la imagen */
+        /* Glow dinámico detrás del logo */
         .glow-effect {
             position: absolute;
-            inset: -4px;
-            border-radius: 1.5rem;
-            background: linear-gradient(45deg, #a855f7, #3b82f6, #ec4899, #3b82f6);
-            background-size: 300% 300%;
-            animation: gradientGlow 6s ease infinite;
+            inset: -10px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, rgba(147, 51, 234, 0.2) 50%, transparent 70%);
+            animation: pulseGlow 4s ease-in-out infinite alternate;
             filter: blur(20px);
-            opacity: 0.4;
+            opacity: 0.6;
             z-index: -1;
-            transition: opacity 0.3s, filter 0.3s;
+            transition: opacity 0.4s, filter 0.4s;
         }
 
-        .image-card-container:hover .glow-effect {
-            opacity: 0.85;
-            filter: blur(28px);
+        @media (min-width: 640px) {
+            .glow-effect {
+                inset: -20px;
+                filter: blur(25px);
+            }
         }
 
-        @keyframes gradientGlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .logo-card-container:hover .glow-effect {
+            opacity: 1;
+            filter: blur(35px);
         }
 
-        /* Scanlines estéticas ultra sutiles */
+        @keyframes pulseGlow {
+            0% { transform: scale(0.92); opacity: 0.4; }
+            100% { transform: scale(1.12); opacity: 0.8; }
+        }
+
+        /* Scanlines estéticas */
         .scanline-overlay {
             position: fixed;
             inset: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
             background-size: 100% 4px;
             z-index: 2;
             pointer-events: none;
-            opacity: 0.4;
+            opacity: 0.25;
+        }
+
+        /* Estilos del Footer */
+        footer {
+            position: absolute;
+            bottom: 1rem;
+            z-index: 20;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            footer {
+                bottom: 1.5rem;
+            }
+        }
+
+        .footer-credits {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.4rem 0.9rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 640px) {
+            .footer-credits {
+                gap: 0.75rem;
+                padding: 0.5rem 1.25rem;
+            }
+        }
+
+        .footer-credits:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-credits span {
+            font-size: 0.65rem;
+            text-transform: lowercase;
+            letter-spacing: 0.12em;
+            color: #888888;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+        }
+
+        @media (min-width: 640px) {
+            .footer-credits span {
+                font-size: 0.75rem;
+                letter-spacing: 0.15em;
+            }
+        }
+
+        .zero-systems-logo {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .zero-systems-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .zero-systems-svg {
+            height: 18px;
+            width: auto;
+            display: block;
+        }
+
+        @media (min-width: 640px) {
+            .zero-systems-svg {
+                height: 24px;
+            }
+        }
+
+        /* SVG Central animado */
+        .hero-svg {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
+            transition: filter 0.3s ease;
+        }
+
+        .logo-card-container:hover .hero-svg {
+            filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.6));
         }
     </style>
 </head>
-<body class="flex flex-col items-center justify-between min-h-screen w-full relative overflow-hidden select-none">
+<body class="flex flex-col items-center justify-between h-full h-[100dvh] w-full relative overflow-hidden select-none">
 
     <!-- Fondo interactivo de partículas en canvas -->
     <canvas id="bg-canvas"></canvas>
@@ -126,49 +225,79 @@
     <div class="scanline-overlay"></div>
 
     <!-- Layout principal -->
-    <main class="flex flex-col items-center justify-center min-h-screen w-full z-10 px-4 relative">
+    <main class="flex flex-col items-center justify-center h-full w-full z-10 px-4 pb-12 sm:pb-16 relative">
         
-        <!-- Tarjeta de Imagen Central con efecto 3D Parallax/Tilt -->
-        <div class="image-card-container mb-10 cursor-pointer" id="tilt-container">
-            <div class="relative group">
+        <!-- LOGO CENTRAL ZERO SYSTEMS CON REACCIÓN 3D / TILT -->
+        <div class="logo-card-container my-4 sm:my-8 cursor-pointer" id="tilt-container">
+            <div class="relative group flex items-center justify-center">
                 <div class="glow-effect"></div>
-                <div id="tilt-card" class="image-card relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-2xl overflow-hidden border border-white/10 bg-black/40 backdrop-blur-md shadow-2xl flex items-center justify-center p-2">
-                    <img 
-                        id="main-img"
-                        src="https://scontent.fmex27-1.fna.fbcdn.net/v/t39.30808-6/807699310_2630943230708882_4646624149915684074_n.jpg?stp=dst-jpg_tt6&cstp=mx1106x873&ctp=s512x512&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeE9QmcRDZrsVW4PdlvNwqHEVdyVwjdIYNhV3JXCN0hg2N30E-txiWmtaWezvmedpcIAzr-PQAG6tI4MvCAMRfcD&_nc_ohc=EMR2qUZ2KVYQ7kNvwGDYUdA&_nc_oc=AdqqaEpXCHwA2XkL2HHp6rmlh8Sz4aACIJ8BRJ7lsFgLiTfZJXqLIaxigjaeUu8AeHWK__sEFKO1HGJDHUsUIElK&_nc_zt=23&_nc_ht=scontent.fmex27-1.fna&_nc_gid=FSDz8KVByxJJcgoFWfEpyw&_nc_ss=7b2a8&oh=00_AQKywXJnP8x8pbFwvxB55rogn-S5NpGItCT0555uMjSUgw&oe=6AB3DFF4" 
-                        alt="Central Coming Soon Graphic"
-                        class="w-full h-full object-cover rounded-xl shadow-lg"
-                        onerror="this.onerror=null; this.src='https://placehold.co/600x600/0d0d12/a855f7?text=COMING+SOON';"
-                    />
+                <div id="tilt-card" class="logo-card relative p-3 sm:p-6 rounded-2xl sm:rounded-3xl backdrop-blur-sm flex items-center justify-center">
+                    
+                    <!-- SVG de ZERO SYSTEMS en el centro -->
+                    <svg class="hero-svg max-w-[260px] xs:max-w-[320px] sm:max-w-[440px] md:max-w-[520px]" viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Iso/Icono Zero Systems -->
+                        <g fill="#FFFFFF">
+                            <path d="M20,65 L110,65 C125,65 130,58 135,48 L142,32 C145,25 140,20 128,20 L40,20 C25,20 20,27 15,37 L8,52 C5,59 10,65 20,65 Z" />
+                            <path d="M50,95 L140,95 C155,95 160,88 165,78 L172,62 C175,55 170,50 158,50 L70,50 C55,50 50,57 45,67 L38,82 C35,89 40,95 50,95 Z" />
+                            <path d="M140,15 L52,105" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+                        </g>
+                        <!-- Texto Marca -->
+                        <text x="180" y="62" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="38" fill="#FFFFFF" letter-spacing="2">ZERO SYSTEMS</text>
+                        <text x="183" y="94" font-family="'Montserrat', sans-serif" font-weight="600" font-style="italic" font-size="22" fill="#E0E0E0" letter-spacing="7">CERO LÍMITES</text>
+                    </svg>
+
                 </div>
             </div>
         </div>
 
         <!-- Título interactivo 'COMING SOON' con animación de letras independientes -->
-        <h1 id="kinetic-title" class="text-4xl sm:text-6xl md:text-8xl font-black tracking-widest text-center uppercase flex flex-wrap justify-center gap-x-3 sm:gap-x-6 gap-y-2 my-2">
+        <h1 id="kinetic-title" class="text-3xl xs:text-4xl sm:text-6xl md:text-7xl font-black tracking-wider sm:tracking-widest text-center uppercase flex flex-wrap justify-center gap-x-2 sm:gap-x-6 gap-y-1 mt-2 sm:mt-4 mb-2">
             <!-- Las letras son inyectadas dinámicamente con JavaScript -->
         </h1>
 
         <!-- Subtítulo / Indicador sutil minimalista -->
-        <p class="text-xs sm:text-sm tracking-[0.4em] uppercase text-gray-400 font-light mt-6 animate-pulse">
-            [ Mueve el ratón para interactuar ]
+        <p id="interactive-hint" class="text-[9px] sm:text-xs tracking-[0.3em] sm:tracking-[0.5em] uppercase text-gray-400 font-light mt-2 sm:mt-4 animate-pulse text-center">
+            [ Interactúa con la pantalla ]
         </p>
     </main>
 
-    <!-- Footer sutil -->
-    <footer class="absolute bottom-4 z-10 text-[10px] tracking-widest text-gray-600 uppercase">
-        © COMING SOON • ALL RIGHTS RESERVED
+    <!-- FOOTER SOLICITADO -->
+    <footer>
+        <div class="footer-credits">
+            <span>created by</span>
+            <a href="https://j05ulr.github.io/ZeroSystems/" target="_blank" rel="noopener noreferrer" class="zero-systems-logo">
+                <svg class="zero-systems-svg" viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Iso/Icono Zero Systems -->
+                    <g fill="#FFFFFF">
+                        <path d="M20,65 L110,65 C125,65 130,58 135,48 L142,32 C145,25 140,20 128,20 L40,20 C25,20 20,27 15,37 L8,52 C5,59 10,65 20,65 Z" />
+                        <path d="M50,95 L140,95 C155,95 160,88 165,78 L172,62 C175,55 170,50 158,50 L70,50 C55,50 50,57 45,67 L38,82 C35,89 40,95 50,95 Z" />
+                        <path d="M140,15 L52,105" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+                    </g>
+                    <!-- Texto Marca -->
+                    <text x="180" y="62" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="38" fill="#FFFFFF" letter-spacing="2">ZERO SYSTEMS</text>
+                    <text x="183" y="94" font-family="'Montserrat', sans-serif" font-weight="600" font-style="italic" font-size="22" fill="#E0E0E0" letter-spacing="7">CERO LÍMITES</text>
+                </svg>
+            </a>
+        </div>
     </footer>
 
     <script>
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        
+        // Ajustar mensaje interactivo si es táctil
+        if (isTouchDevice) {
+            const hint = document.getElementById('interactive-hint');
+            if (hint) hint.innerText = '[ Toca la pantalla para interactuar ]';
+        }
+
         /* ==========================================
-           1. CANVAS DE FONDO REACTIVO AL RATÓN (GRID & PARTICLES)
+           1. CANVAS DE FONDO REACTIVO (OPTIMIZADO)
            ========================================== */
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
 
         let width, height;
-        let mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, radius: 180 };
+        let mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, radius: isTouchDevice ? 140 : 200 };
 
         function resizeCanvas() {
             width = canvas.width = window.innerWidth;
@@ -184,38 +313,35 @@
                 this.y = y;
                 this.vx = 0;
                 this.vy = 0;
-                this.size = Math.random() * 2 + 1;
-                this.baseAlpha = Math.random() * 0.4 + 0.1;
+                this.size = Math.random() * (isTouchDevice ? 1.5 : 2) + 1;
+                this.baseAlpha = Math.random() * 0.35 + 0.1;
                 this.alpha = this.baseAlpha;
             }
 
             update() {
-                // Calcular distancia al ratón
                 const dx = mouse.x - this.x;
                 const dy = mouse.y - this.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
 
-                // Fuerza de repulsión reactiva
                 if (dist < mouse.radius) {
                     const force = (mouse.radius - dist) / mouse.radius;
                     const angle = Math.atan2(dy, dx);
-                    const pushX = -Math.cos(angle) * force * 45;
-                    const pushY = -Math.sin(angle) * force * 45;
+                    const pushFactor = isTouchDevice ? 35 : 50;
+                    const pushX = -Math.cos(angle) * force * pushFactor;
+                    const pushY = -Math.sin(angle) * force * pushFactor;
 
                     this.vx += pushX;
                     this.vy += pushY;
-                    this.alpha = Math.min(1, this.baseAlpha + force * 0.7);
+                    this.alpha = Math.min(1, this.baseAlpha + force * 0.8);
                 } else {
                     this.alpha += (this.baseAlpha - this.alpha) * 0.05;
                 }
 
-                // Fuerza de retorno suave (muelle)
                 const homeDx = this.originX - this.x;
                 const homeDy = this.originY - this.y;
                 this.vx += homeDx * 0.03;
                 this.vy += homeDy * 0.03;
 
-                // Fricción
                 this.vx *= 0.85;
                 this.vy *= 0.85;
 
@@ -224,7 +350,7 @@
             }
 
             draw() {
-                ctx.fillStyle = `rgba(168, 85, 247, ${this.alpha})`;
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
@@ -234,7 +360,10 @@
         let particles = [];
         function initParticles() {
             particles = [];
-            const spacing = Math.max(35, Math.floor(Math.min(width, height) / 25));
+            // Densidad adaptativa: Menos partículas en pantallas pequeñas para optimizar rendimiento
+            const baseSpacing = isTouchDevice ? 45 : 35;
+            const spacing = Math.max(baseSpacing, Math.floor(Math.min(width, height) / (isTouchDevice ? 18 : 25)));
+            
             for (let x = 0; x < width; x += spacing) {
                 for (let y = 0; y < height; y += spacing) {
                     particles.push(new Particle(x, y));
@@ -243,7 +372,7 @@
         }
 
         function drawConnections() {
-            const maxDist = 70;
+            const maxDist = isTouchDevice ? 55 : 75;
             for (let i = 0; i < particles.length; i++) {
                 for (let j = i + 1; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
@@ -251,9 +380,9 @@
                     const dist = Math.sqrt(dx * dx + dy * dy);
 
                     if (dist < maxDist) {
-                        const alpha = (1 - dist / maxDist) * 0.15;
-                        ctx.strokeStyle = `rgba(147, 51, 234, ${alpha})`;
-                        ctx.lineWidth = 0.6;
+                        const alpha = (1 - dist / maxDist) * 0.12;
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+                        ctx.lineWidth = 0.5;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
@@ -266,7 +395,6 @@
         function animateCanvas() {
             ctx.clearRect(0, 0, width, height);
             
-            // Interpola suavemente las coordenadas del ratón
             mouse.x += (mouse.targetX - mouse.x) * 0.1;
             mouse.y += (mouse.targetY - mouse.y) * 0.1;
 
@@ -282,7 +410,7 @@
         window.addEventListener('resize', resizeCanvas);
 
         /* ==========================================
-           2. TIPOGRAFÍA DINÁMICA RECONSTRUIDA ("COMING SOON")
+           2. TIPOGRAFÍA DINÁMICA DE "COMING SOON"
            ========================================== */
         const titleContainer = document.getElementById('kinetic-title');
         const words = ["COMING", "SOON"];
@@ -292,27 +420,21 @@
             titleContainer.innerHTML = '';
             letterElements = [];
 
-            words.forEach((wordText, wordIndex) => {
+            words.forEach((wordText) => {
                 const wordSpan = document.createElement('span');
                 wordSpan.className = 'inline-block whitespace-nowrap';
 
-                wordText.split('').forEach((char, charIndex) => {
+                wordText.split('').forEach((char) => {
                     const letterSpan = document.createElement('span');
                     letterSpan.innerText = char;
                     letterSpan.className = 'kinetic-letter';
                     letterSpan.dataset.char = char;
                     
-                    // Almacenar estado de animación propio
                     letterSpan.state = {
-                        baseX: 0,
-                        baseY: 0,
                         offsetX: 0,
                         offsetY: 0,
-                        rotX: 0,
-                        rotY: 0,
-                        rotZ: 0,
                         scale: 1,
-                        phase: Math.random() * Math.PI * 2
+                        rotZ: 0
                     };
 
                     wordSpan.appendChild(letterSpan);
@@ -325,20 +447,17 @@
 
         buildKineticText();
 
-        // Bucle continuo para la animación flotante ondulatoria de cada letra
         let time = 0;
         function animateTypography() {
-            time += 0.03;
+            time += 0.035;
 
             letterElements.forEach((el, index) => {
                 const st = el.state;
                 
-                // Movimiento senoidal continuo (ondas flotantes)
-                const waveY = Math.sin(time + index * 0.4) * 12;
-                const waveX = Math.cos(time * 0.8 + index * 0.3) * 5;
-                const waveRot = Math.sin(time * 0.5 + index * 0.2) * 8;
+                const waveY = Math.sin(time + index * 0.4) * (isTouchDevice ? 6 : 10);
+                const waveX = Math.cos(time * 0.7 + index * 0.3) * (isTouchDevice ? 2.5 : 4);
+                const waveRot = Math.sin(time * 0.5 + index * 0.2) * (isTouchDevice ? 4 : 6);
 
-                // Reacción por proximidad del cursor a cada letra
                 const rect = el.getBoundingClientRect();
                 const letterCenterX = rect.left + rect.width / 2;
                 const letterCenterY = rect.top + rect.height / 2;
@@ -346,7 +465,7 @@
                 const dx = mouse.x - letterCenterX;
                 const dy = mouse.y - letterCenterY;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-                const maxRepelDist = 150;
+                const maxRepelDist = isTouchDevice ? 90 : 140;
 
                 let repelX = 0;
                 let repelY = 0;
@@ -356,13 +475,13 @@
                 if (dist < maxRepelDist) {
                     const factor = (1 - dist / maxRepelDist);
                     const angle = Math.atan2(dy, dx);
-                    repelX = -Math.cos(angle) * factor * 50;
-                    repelY = -Math.sin(angle) * factor * 50;
-                    repelScale = 1 + factor * 0.4;
-                    repelRotZ = -Math.cos(angle) * factor * 25;
+                    const repelForce = isTouchDevice ? 35 : 55;
+                    repelX = -Math.cos(angle) * factor * repelForce;
+                    repelY = -Math.sin(angle) * factor * repelForce;
+                    repelScale = 1 + factor * (isTouchDevice ? 0.2 : 0.35);
+                    repelRotZ = -Math.cos(angle) * factor * (isTouchDevice ? 12 : 20);
                 }
 
-                // Interpolación suave del movimiento
                 st.offsetX += (repelX - st.offsetX) * 0.15;
                 st.offsetY += (repelY - st.offsetY) * 0.15;
                 st.scale += (repelScale - st.scale) * 0.15;
@@ -379,11 +498,13 @@
         }
 
         /* ==========================================
-           3. INTERACCIÓN DE RATÓN Y EFECTO TILT 3D
+           3. INTERACCIÓN DE RATÓN Y TILT 3D LOGO
            ========================================== */
         const mouseLight = document.getElementById('mouse-light');
         const tiltContainer = document.getElementById('tilt-container');
         const tiltCard = document.getElementById('tilt-card');
+
+        let touchTimeout;
 
         function handlePointerMove(e) {
             const clientX = e.clientX || (e.touches && e.touches[0].clientX);
@@ -393,11 +514,13 @@
                 mouse.targetX = clientX;
                 mouse.targetY = clientY;
 
-                // Mover halo de luz
-                mouseLight.style.left = `${clientX}px`;
-                mouseLight.style.top = `${clientY}px`;
+                if (!isTouchDevice) {
+                    mouseLight.classList.add('active');
+                    mouseLight.style.left = `${clientX}px`;
+                    mouseLight.style.top = `${clientY}px`;
+                }
 
-                // Tilt 3D para la tarjeta de imagen central
+                // Tilt 3D
                 const rect = tiltContainer.getBoundingClientRect();
                 const cardCenterX = rect.left + rect.width / 2;
                 const cardCenterY = rect.top + rect.height / 2;
@@ -405,26 +528,37 @@
                 const cardDx = clientX - cardCenterX;
                 const cardDy = clientY - cardCenterY;
 
-                const rotateX = (-cardDy / (rect.height / 2)) * 18; // Invertir Y para inclinación natural
-                const rotateY = (cardDx / (rect.width / 2)) * 18;
+                const maxRotation = isTouchDevice ? 10 : 20;
+                const rotateX = (-cardDy / (rect.height / 2)) * maxRotation;
+                const rotateY = (cardDx / (rect.width / 2)) * maxRotation;
 
-                tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+                const scaleVal = isTouchDevice ? 1.03 : 1.06;
+                tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(${scaleVal}, ${scaleVal}, ${scaleVal})`;
+
+                // Si es táctil, resetear posición después de dejar de tocar
+                if (isTouchDevice) {
+                    clearTimeout(touchTimeout);
+                    touchTimeout = setTimeout(handlePointerLeave, 1500);
+                }
             }
         }
 
         function handlePointerLeave() {
             mouse.targetX = -1000;
             mouse.targetY = -1000;
+            mouseLight.classList.remove('active');
             tiltCard.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
         }
 
-        // Event listeners para escritorio y pantalla táctil
+        // Listeners adaptativos
         window.addEventListener('mousemove', handlePointerMove);
+        window.addEventListener('touchstart', handlePointerMove, { passive: true });
         window.addEventListener('touchmove', handlePointerMove, { passive: true });
+        window.addEventListener('touchend', handlePointerLeave);
         document.body.addEventListener('mouseleave', handlePointerLeave);
 
         /* ==========================================
-           4. INICIALIZACIÓN AL Cargar
+           4. INICIALIZACIÓN
            ========================================== */
         window.onload = function() {
             resizeCanvas();
